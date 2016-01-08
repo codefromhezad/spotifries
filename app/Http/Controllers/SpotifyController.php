@@ -8,24 +8,24 @@ use App\Helpers\SpotifyHelper;
 class SpotifyController extends Controller
 {
     public function see() {
-        if( ! SpotifyHelper::instance()->is_connected ) {
+        $spotify_helper = SpotifyHelper::instance();
+
+        dd( $spotify_helper );
+        die;
+
+        if( ! $spotify_helper->is_connected ) {
             return redirect()->action('SpotifyController@connect');
         }
 
         
     }
 
-
     public function connect() {
         $spotify_helper = SpotifyHelper::instance();
+        
+        $spotify_helper->connect();
 
-        if( isset($_GET['code']) ) {
-            $spotify_helper->request_access_token($_GET['code']);
-        } else {
-            $spotify_helper->redirect_to_spotify_auth();
-        }
-
-        if( $spotify_helper->connect() ) {
+        if( $spotify_helper->is_connected ) {
             return redirect()->action('SpotifyController@see');
         }
     }

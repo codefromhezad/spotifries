@@ -15,6 +15,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/spotify/see', ['uses' => 'SpotifyController@see']);
+Route::get('/spotify/connect', ['uses' => 'SpotifyController@connect']);
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -27,5 +30,5 @@ Route::get('/', function () {
 */
 
 Route::group(['middleware' => ['web']], function () {
-    //
+
 });

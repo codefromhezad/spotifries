@@ -7,9 +7,11 @@
 	    @foreach($my_playlists as $playlist)
 			<div class="one-playlist" data-playlist-id="{{ $playlist->id }}">
 				<h4 class="title">{{ $playlist->name }}</h4>
-
-				<div class="playlist-dump" style="display: none">
-					<pre>{{ print_r($playlist, true) }}</pre>
+				
+				<a href="#" class="load-playlist-tracks">See tracks</a>
+				<!-- TODO: onclick('.load-playlist-tracks') => AJAX Request to load tracks -->
+				<div class="playlist-tracks">
+					
 				</div>
 			</div>
 	    @endforeach

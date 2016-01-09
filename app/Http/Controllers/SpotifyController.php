@@ -13,6 +13,12 @@ class SpotifyController extends Controller
         if( ! $spotify_helper->is_connected ) {
             return redirect()->action('SpotifyController@connect');
         }
+
+        // $tracks = $spotify_helper->api->getUserPlaylistTracks('hezad', '2xqWecx25al1glOfnHEZ0s');
+        // dd($tracks);
+
+        // $track = $spotify_helper->api->getTrack('5vLukeFJG2VmHt73EwpsBP');
+        // dd($track);
         
         return view('me', [
             'my_playlists' => $spotify_helper->user_playlists()

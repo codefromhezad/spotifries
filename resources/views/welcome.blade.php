@@ -1,7 +1,9 @@
 @extends('layout')
 
 @section('content')
-    <div>
-        <a href="{{ action('SpotifyController@connect') }}">Connect spotify account</a>
-    </div>
+    @if( \App\Helpers\SpotifyHelper::instance()->is_connected )
+        <a href="{{ action('SpotifyController@me') }}">Explore</a>
+    @else
+        <a href="{{ action('SpotifyController@connect') }}">Connect your spotify account first</a>
+    @endif
 @endsection

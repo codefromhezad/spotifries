@@ -7,17 +7,18 @@ use App\Helpers\SpotifyHelper;
 
 class SpotifyController extends Controller
 {
-    public function see() {
+    public function me() {
         $spotify_helper = SpotifyHelper::instance();
-
-        dd( $spotify_helper );
-        die;
 
         if( ! $spotify_helper->is_connected ) {
             return redirect()->action('SpotifyController@connect');
         }
 
-        
+        $playlists = $spotify_helper->api->getMyPlaylists();
+
+        return view('me', [
+            'my_playlists' => $playlists->items
+        ]);
     }
 
     public function connect() {
@@ -26,7 +27,7 @@ class SpotifyController extends Controller
         $spotify_helper->connect();
 
         if( $spotify_helper->is_connected ) {
-            return redirect()->action('SpotifyController@see');
+            return redirect()->action('SpotifyController@me');
         }
     }
 }

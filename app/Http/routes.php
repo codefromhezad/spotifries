@@ -30,7 +30,7 @@ Route::group(['middleware' => ['web']], function () {
 	    return view('welcome');
 	});
 
-	Route::get('/spotify/see', ['uses' => 'SpotifyController@see']);
+	Route::get('/spotify/me', ['uses' => 'SpotifyController@me']);
 	Route::get('/spotify/connect', ['uses' => 'SpotifyController@connect']);
-	
+
 });

@@ -47,11 +47,36 @@ class SpotifyHelper {
 	}
 
 	public function user($prop = null) {
-		if( ! \Session::get('spotify_user') ) {
-			\Session::set('spotify_user', $this->api->me());
+		if( ! \Session::get('spotify_user_id') ) {
+			$user = $this->resync_user();
+		} else {
+			$user = \App\User::find(\Session::get('spotify_user_id'));
 		}
 
-		return \Session::get('spotify_user');
+		if( $prop === null ) {
+			return $user;
+		} else {
+			return $user[$prop];
+		}
+	}
+
+	public function resync_user() {
+		$api_user = $this->api->me();
+		$db_user = \App\User::find($api_user->id);
+
+		if( ! $db_user ) {
+			$db_user = new \App\User();
+		}
+
+		$db_user->id = $api_user->id;
+		$db_user->name = $api_user->display_name;
+		$db_user->email = $api_user->email;
+
+		\Session::set('spotify_user_id', $db_user->id);
+
+		$db_user->save();
+
+		return $db_user;
 	}
 
 	public function connect() {

@@ -48,7 +48,7 @@ class SpotifyHelper {
 
 	public function user($prop = null) {
 		if( ! \Session::get('spotify_user_id') ) {
-			$user = $this->resync_user();
+			$user = $this->sync_user();
 		} else {
 			$user = \App\User::find(\Session::get('spotify_user_id'));
 		}
@@ -60,7 +60,20 @@ class SpotifyHelper {
 		}
 	}
 
-	public function resync_user() {
+	public function user_playlists() {
+		$user_id = $this->user('id');
+
+		$db_playlists = \App\Playlist::where('user_id', $user_id)
+									 ->get();
+
+		if( ! $db_playlists || ! count( $db_playlists ) ) {
+			$db_playlists = $this->sync_user_playlists();
+		}
+		
+		return $db_playlists;
+	}
+
+	public function sync_user() {
 		$api_user = $this->api->me();
 		$db_user = \App\User::find($api_user->id);
 
@@ -77,6 +90,34 @@ class SpotifyHelper {
 		$db_user->save();
 
 		return $db_user;
+	}
+
+	public function sync_user_playlists() {
+		$api_playlists = $this->api->getMyPlaylists();
+		$db_playlists = [];
+		$user_id = $this->user('id');
+
+		// This will only sync the 10 first playlists.
+		// TODO: Handle API's pagination to sync everything
+		foreach($api_playlists->items as $api_playlist) {
+			$db_playlist = \App\Playlist::where('id', $api_playlist->id)
+										->where('user_id', $user_id)
+										->first();
+
+			if( ! $db_playlist ) {
+				$db_playlist = new \App\Playlist();
+			}
+
+			$db_playlist->id = $api_playlist->id;
+			$db_playlist->name = $api_playlist->name;
+			$db_playlist->user_id = $user_id;
+
+			$db_playlist->save();
+
+			$db_playlists[] = $db_playlist;
+		}
+
+		return $db_playlists;
 	}
 
 	public function connect() {

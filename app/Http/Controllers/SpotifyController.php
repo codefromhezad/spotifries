@@ -15,9 +15,9 @@ class SpotifyController extends Controller
         }
 
         $playlists = $spotify_helper->api->getMyPlaylists();
-
+        
         return view('me', [
-            'my_playlists' => $playlists->items
+            'my_playlists' => $playlists
         ]);
     }
 

@@ -2,13 +2,11 @@
 
 @section('content')
 	<section class="section my-playlists">
-	    @foreach($my_playlists as $playlist)
-			<div class="one-playlist {{ $playlist->public ? 'is-public' : '' }}" data-playlist-id="{{ $playlist->id }}">
-				<h3 class="title">{{ $playlist->name }}</h3>
+		<h2>My playlists <small>({{ $my_playlists->total }} playlists)</small></h2>
 
-				<div class="playlist-tracks">
-					{{ $playlist->tracks->total }} tracks.
-				</div>
+	    @foreach($my_playlists->items as $playlist)
+			<div class="one-playlist {{ $playlist->public ? 'is-public' : '' }}" data-playlist-id="{{ $playlist->id }}">
+				<h4 class="title">{{ $playlist->name }} <small>({{ $playlist->tracks->total }} tracks.)</small></h4>
 
 				<div class="playlist-dump" style="display: none">
 					<pre>{{ print_r($playlist, true) }}</pre>

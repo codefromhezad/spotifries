@@ -46,6 +46,14 @@ class SpotifyHelper {
 		}
 	}
 
+	public function user($prop = null) {
+		if( ! \Session::get('spotify_user') ) {
+			\Session::set('spotify_user', $this->api->me());
+		}
+
+		return \Session::get('spotify_user');
+	}
+
 	public function connect() {
 		if( isset($_GET['code']) ) {
 			// Request new access token
